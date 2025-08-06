@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changement de Mot de Passe 🔐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f1f0ff 0%, #e8e7ff 30%, #ddd6fe 70%, #c4b5fd 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(249, 248, 255, 0.9);
+            border: 1px solid rgba(196, 181, 253, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15), 0 3px 16px rgba(139, 92, 246, 0.08);
+            padding: 48px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .header {
+            margin-bottom: 35px;
+        }
+
+        .title {
+            font-size: 2.4em;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .emoji {
+            font-size: 2.5em;
+            margin: 0 8px;
+            animation: bounce 2s infinite;
+            display: none;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+            60% { transform: translateY(-4px); }
+        }
+
+        .subtitle {
+            color: #4b5563;
+            font-size: 1.15em;
+            font-weight: 400;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            max-width: 420px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .info-box h3 {
+            margin-bottom: 12px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .info-box p {
+            font-weight: 400;
+            opacity: 0.95;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1em;
+            letter-spacing: -0.01em;
+        }
+
+        .password-input-container {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 50px 16px 16px;
+            border: 2px solid #e9d5ff;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            font-family: inherit;
+            color: #1f2937;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #9ca3af;
+            transition: all 0.3s ease;
+            padding: 4px;
+            border-radius: 6px;
+        }
+
+        .toggle-password:hover {
+            color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .password-strength {
+            margin-top: 12px;
+            height: 4px;
+            background: #f3e8ff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+        }
+
+        .strength-text {
+            font-size: 0.9em;
+            margin-top: 8px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            color: #4b5563;
+        }
+
+        .requirements {
+            background: rgba(248, 245, 255, 0.8);
+            border: 1px solid rgba(196, 181, 253, 0.3);
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .requirements:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 2px 12px rgba(139, 92, 246, 0.08);
+        }
+
+        .requirements ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .requirements li {
+            padding: 6px 0;
+            font-size: 0.9em;
+            font-weight: 400;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            letter-spacing: -0.01em;
+        }
+
+        .requirements li.valid {
+            color: #059669;
+            font-weight: 500;
+        }
+
+        .requirements li.valid::before {
+            content: '✓ ';
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .requirements li:not(.valid)::before {
+            content: '• ';
+            color: #d1d5db;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.05em;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 200px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+            letter-spacing: -0.01em;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-top: 24px;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .success-message h3 {
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-top: 8px;
+            display: none;
+            letter-spacing: -0.01em;
+        }
+
+        .section-title {
+            color: #1f2937;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin: 36px 0 20px 0;
+            text-align: left;
+            border-left: 4px solid #8b5cf6;
+            padding-left: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(600px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 28px;
+                margin: 15px;
+                border-radius: 16px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">
+                Changement de Mot de Passe
+            </h1>
+            <p class="subtitle">Sécurisez votre compte avec un nouveau mot de passe robuste</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Sécurité renforcée</h3>
+            <p>Votre nouveau mot de passe doit respecter nos critères de sécurité pour protéger au mieux votre compte.</p>
+            <p><strong>Temps estimé : 2 minutes</strong></p>
+        </div>
+
+        <form id="passwordChangeForm" method="POST">
+            <div class="section-title">Authentification actuelle</div>
+            
+            <div class="form-group">
+                <label for="currentPassword">Mot de passe actuel *</label>
+                <div class="password-input-container">
+                    <input type="password" id="currentPassword" name="currentPassword" required>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('currentPassword')">👁</span>
+                </div>
+                <div class="error-message" id="currentPasswordError"></div>
+            </div>
+
+            <div class="section-title">Nouveau mot de passe</div>
+
+            <div class="form-group">
+                <label for="newPassword">Nouveau mot de passe *</label>
+                <div class="password-input-container">
+                    <input type="password" id="newPassword" name="newPassword" required>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('newPassword')">👁</span>
+                </div>
+                <div class="password-strength">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="strength-text" id="strengthText"></div>
+                
+                <div class="requirements">
+                    <ul id="requirementsList">
+                        <li id="req-length">Au moins 8 caractères</li>
+                        <li id="req-uppercase">Au moins 1 majuscule</li>
+                        <li id="req-lowercase">Au moins 1 minuscule</li>
+                        <li id="req-number">Au moins 1 chiffre</li>
+                        <li id="req-special">Au moins 1 caractère spécial</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirmer le nouveau mot de passe *</label>
+                <div class="password-input-container">
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('confirmPassword')">👁</span>
+                </div>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <div class="loading-spinner" id="loadingSpinner"></div>
+                <span id="buttonText">Changer le mot de passe</span>
+            </button>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            <h3>Mot de passe modifié avec succès !</h3>
+            <p>Votre mot de passe a été mis à jour. Vous serez redirigé automatiquement dans quelques secondes.</p>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let passwordStrength = 0;
+        
+        // Fonction pour basculer la visibilité du mot de passe
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const toggleBtn = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleBtn.textContent = '○';
+            } else {
+                input.type = 'password';
+                toggleBtn.textContent = '👁';
+            }
+        }
+
+        // Fonction pour vérifier la force du mot de passe
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+
+            // Mettre à jour l'affichage des exigences
+            Object.keys(requirements).forEach(req => {
+                const element = document.getElementById(`req-${req}`);
+                if (requirements[req]) {
+                    element.classList.add('valid');
+                } else {
+                    element.classList.remove('valid');
+                }
+            });
+
+            // Calculer le score de force
+            const validCount = Object.values(requirements).filter(Boolean).length;
+            passwordStrength = validCount;
+
+            // Mettre à jour la barre de force
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            const colors = ['#dc2626', '#ea580c', '#d97706', '#059669', '#10b981'];
+            const texts = ['Très faible', 'Faible', 'Moyen', 'Fort', 'Très fort'];
+            
+            strengthBar.style.width = (validCount * 20) + '%';
+            strengthBar.style.backgroundColor = colors[validCount - 1] || '#e5e7eb';
+            strengthText.textContent = validCount > 0 ? texts[validCount - 1] : '';
+            strengthText.style.color = colors[validCount - 1] || '#6b7280';
+
+            return validCount === 5;
+        }
+
+        // Fonction pour valider la confirmation du mot de passe
+        function validatePasswordMatch() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorElement = document.getElementById('confirmPasswordError');
+
+            if (confirmPassword && newPassword !== confirmPassword) {
+                errorElement.textContent = 'Les mots de passe ne correspondent pas';
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+
+        // Animation des confettis (version sobre)
+        function createConfetti() {
+            const symbols = ['•', '○', '◦', '▪', '▫', '■'];
+            const container = document.querySelector('.container');
+            
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+                    confetti.style.cssText = `
+                        position: absolute;
+                        left: ${Math.random() * 100}%;
+                        top: 0;
+                        font-size: 1.5em;
+                        color: #8b5cf6;
+                        z-index: 1000;
+                        pointer-events: none;
+                        animation: fall ${2.5 + Math.random() * 2}s linear forwards;
+                    `;
+                    
+                    container.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 120);
+            }
+        }
+
+        // Gestionnaires d'événements
+        document.getElementById('newPassword').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+            validatePasswordMatch();
+        });
+
+        document.getElementById('confirmPassword').addEventListener('input', validatePasswordMatch);
+
+        document.getElementById('passwordChangeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // Vérifications finales
+            if (passwordStrength < 5) {
+                alert('Veuillez choisir un mot de passe plus fort');
+                return;
+            }
+            
+            if (!validatePasswordMatch()) {
+                return;
+            }
+            
+            // Animation de chargement
+            loadingSpinner.style.display = 'inline-block';
+            buttonText.textContent = 'Modification en cours...';
+            submitBtn.disabled = true;
+            submitBtn.style.transform = 'scale(0.98)';
+            
+            // Simulation de l'envoi (remplacez par votre logique d'envoi)
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'block';
+                createConfetti();
+                document.getElementById('passwordChangeForm').style.display = 'none';
+                
+                // Simulation d'une redirection après 3 secondes
+                setTimeout(() => {
+                    window.location.href = '/dashboard'; // Remplacez par votre URL
+                }, 3000);
+                
+            }, 2000);
+        });
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Formulaire de changement de mot de passe initialisé');
+        });
+    </script>
+</body>
+</html>
