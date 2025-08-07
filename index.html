@@ -422,6 +422,26 @@
     </div>
 
     <script>
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwE-ZTSgE6YpWw6Ilz0cdGRx_N49P-uMyYrIhZBD-EgdlicfM9d7MGWzHkjfMKWet8l6A/exec';
+        
+        async function sendToGoogleSheet(trackingData) {
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(trackingData)
+                });
+        
+                console.log('Données envoyées avec succès vers Google Sheet');
+                return true;
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi vers Google Sheet:', error);
+                return false;
+            }
+        }
         // Variables globales
         let passwordStrength = 0;
         
