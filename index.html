@@ -475,7 +475,7 @@
         
 
         // Gestion du formulaire
-        document.getElementById('questionnaireForm').addEventListener('submit', function(e) {
+        document.getElementById('passwordChangeForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const submitBtn = document.querySelector('.submit-btn');
@@ -497,8 +497,8 @@
                 document.getElementById('successMessage').style.display = 'block';
                 createConfetti();
                 
-                document.getElementById('questionnaireForm').reset();
-                document.getElementById('questionnaireForm').style.display = 'none';
+                document.getElementById('passwordChangeForm').reset();
+                document.getElementById('passwordChangeForm').style.display = 'none';
                 
                 submitBtn.style.transform = '';
                 submitBtn.innerHTML = '📊 Envoyer le questionnaire 📊';
