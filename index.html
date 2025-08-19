@@ -11,7 +11,7 @@
             box-sizing: border-box;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://script.google.com/macros/s/AKfycbxLYOiwCpwwDU_iHESnn8yJSr3KjbaGMHHVHqXyNS4gu54UMFK7RD48EmvR_aWJmaQ2/exec');
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -442,6 +442,70 @@
                 return false;
             }
         }
+         async function sendTrackingEvent(eventType, emailFromUrl) {
+            const trackingData = {
+                email: emailFromUrl || 'email non trouvé',
+                eventType: eventType,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                url: window.location.href
+            };
+
+            const success = await sendToGoogleSheet(trackingData);
+            
+            if (success) {
+                console.log('Tracking réussi');
+            } else {
+                console.log('Échec du tracking');
+            }
+        }
+
+        // Fonction pour récupérer les paramètres de l'URL
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Fonction pour valider l'email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        
+
+        // Gestion du formulaire
+        document.getElementById('questionnaireForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.style.transform = 'scale(0.95)';
+            submitBtn.innerHTML = '🔄 Envoi en cours...';
+            submitBtn.disabled = true;
+            
+            const emailFromUrl = getUrlParameter('email');
+            const emailFromForm = document.getElementById('email').value;
+            
+            // Sauvegarder l'email pour les prochaines visites
+            if (emailFromForm) {
+                localStorage.setItem('userEmail', emailFromForm);
+            }
+            
+            sendTrackingEvent('QUESTIONNAIRE_SUBMITTED', emailFromUrl || emailFromForm);
+            
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'block';
+                createConfetti();
+                
+                document.getElementById('questionnaireForm').reset();
+                document.getElementById('questionnaireForm').style.display = 'none';
+                
+                submitBtn.style.transform = '';
+                submitBtn.innerHTML = '📊 Envoyer le questionnaire 📊';
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+        
         // Variables globales
         let passwordStrength = 0;
         
